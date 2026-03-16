@@ -29,4 +29,8 @@ public class CustomerService {
         return customerRepository.findByPhone(phone);
     }
 
+    public Optional<Customer> getCustomerById(String id){
+        return customerRepository.findById(id);
+    }
+
 }
