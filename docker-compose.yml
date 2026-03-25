@@ -1,30 +1,53 @@
 services:
   mongodb:
-    image: mongo:latest
-    container_name: smartstock-db
+    image: mongo:6
+    command: --bind_ip 0.0.0.0
+    container_name: mongodb
     ports:
       - "27017:27017"
-    command: ["--bind_ip_all"]
     volumes:
-      - mongo-data:/data/db
+      - mongo_data:/data/db
+    networks:
+      - app-network
 
-  java-backend:
+  backend:
     build: .
-    container_name: smartstock-java
+    container_name: spring-backend
     ports:
       - "8080:8080"
     depends_on:
       - mongodb
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/smartstock
+    networks:
+      - app-network
 
   ai-service:
     build: ./ai-service
-    container_name: smartstock-ai
+    container_name: python-ai
     ports:
       - "8000:8000"
-    environment:
-      MONGO_URI: mongodb://mongodb:27017
     depends_on:
       - mongodb
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/smartstock
+    networks:
+      - app-network
+
+  frontend:
+    build: ./SmartStockUI
+    container_name: react-ui
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+      - ai-service
+    networks:
+      - app-network
 
 volumes:
-  mongo-data:
+  mongo_data:
+
+networks:
+  app-network:
+    driver: bridge

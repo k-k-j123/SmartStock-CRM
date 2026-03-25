@@ -7,55 +7,104 @@ SmartStock is a modern, efficient CRM and Inventory Management application built
 - **Customer Management (CRM)**: Maintain detailed customer profiles including contact info, total spending, and visit frequency.
 - **Inventory Tracking**: Manage product stock levels, categories, and pricing with automatic low-stock alerts.
 - **Intelligent Sales Flow**: 
-    - **Automatic Customer Discovery**: Create sales using just a customer's phone number. If they don't exist, the system creates them automatically.
-    - **Stock Automation**: Real-time stock decrementing upon successful sales.
-    - **Loyalty Insights**: Automatically tracks customer "Loyal" status based on purchase history.
+   - **Automatic Customer Discovery**: Create sales using just a customer's phone number. If they don't exist, the system creates them automatically.
+   - **Stock Automation**: Real-time stock decrementing upon successful sales.
+   - **Loyalty Insights**: Automatically tracks customer "Loyal" status based on purchase history.
+- **AI-Powered Insights**: Integrated AI service for advanced data processing and insights.
 - **API Documentation**: Built-in Swagger/OpenAPI support for easy testing and integration.
 
 ## 🛠️ Tech Stack
 
-- **Java 21**
-- **Spring Boot** (Data MongoDB, Web)
-- **MongoDB** (NoSQL Database)
-- **Lombok** (Boilerplate reduction)
-- **SpringDoc OpenAPI** (Swagger UI)
+- **Backend**: Java 21, Spring Boot (Data MongoDB, Web), MongoDB (NoSQL Database)
+- **AI Service**: Python 3.12, FastAPI, Uvicorn
+- **Frontend**: React, Vite, TailwindCSS
+- **Tools**: Docker, Docker Compose, Maven, Lombok, SpringDoc OpenAPI
 
 ## 📦 Prerequisites
 
+Ensure you have the following installed on your local machine:
+
 - **JDK 21** or higher
-- **MongoDB** (running on `localhost:27017` by default)
-- **Maven** (optional, wrapper included)
+- **Python 3.12+**
+- **Node.js 18+**
+- **Docker & Docker Compose**
+- **MongoDB** (if running services individually without Docker)
 
-## ⚙️ Setup & Installation
+---
 
-1. **Clone the repository**:
+## 🐳 Docker Deployment (Recommended)
+
+The easiest way to run the entire SmartStock ecosystem is using Docker Compose.
+
+1. **Build and start all services**:
    ```bash
-   git clone https://github.com/your-username/SmartStock.git
+   docker-compose up --build
+   ```
+
+2. **Access the services**:
+   - **Frontend UI**: [http://localhost:5173](http://localhost:5173)
+   - **Backend API**: [http://localhost:8080](http://localhost:8080)
+   - **AI Service API**: [http://localhost:8000](http://localhost:8000)
+   - **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+---
+
+## ⚙️ Local Development (Individual Services)
+
+If you prefer to run services individually, follow the steps below. Ensure a MongoDB instance is running locally on `mongodb://localhost:27017/smartstock`.
+
+### 1. Backend (Spring Boot)
+1. **Navigate to the root directory**:
+   ```bash
    cd SmartStock
    ```
-
-2. **Configure Database**:
-   Update `src/main/resources/application.properties` with your MongoDB URI if different from the default:
-   ```properties
-   spring.data.mongodb.uri=mongodb://localhost:27017/smartstock_crm
-   ```
-
-3. **Run the application**:
+2. **Build and run**:
    ```bash
    ./mvnw spring-boot:run
    ```
+   *Alternative: Build JAR and run:*
+   ```bash
+   ./mvnw clean package
+   java -jar target/SmartStock-0.0.1-SNAPSHOT.jar
+   ```
+
+### 2. AI Service (FastAPI)
+1. **Navigate to the AI service directory**:
+   ```bash
+   cd ai-service
+   ```
+2. **Setup virtual environment**:
+   ```bash
+   python -m venv venv
+   # Windows
+   .\venv\Scripts\activate
+   # Linux/macOS
+   source venv/bin/activate
+   ```
+3. **Install dependencies and run**:
+   ```bash
+   pip install -r requirements.txt
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+   ```
+
+### 3. Frontend (React)
+1. **Navigate to the UI directory**:
+   ```bash
+   cd SmartStockUI
+   ```
+2. **Install dependencies and run**:
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+---
 
 ## 📖 API Documentation
 
-Once the application is running, you can access the interactive Swagger UI at:
+Once the backend is running, you can access the interactive documentation:
 - **Swagger UI**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 - **OpenAPI Spec**: `http://localhost:8080/v3/api-docs`
-
-### Key Endpoints
-
-- `POST /api/customer`: Create a new customer profile.
-- `GET /api/products`: List all inventory items.
-- `POST /api/sales`: Process a sale (supports automatic customer creation via phone).
 
 ## 🤝 Contributing
 
